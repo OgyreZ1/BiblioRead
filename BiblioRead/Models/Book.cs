@@ -13,7 +13,10 @@ namespace BiblioRead.Models
 
         public int Year { get; set; }
 
-        public int MyProperty { get; set; }
+
+        public Author Author { get; set; }
+
+        public int AuthorId { get; set; }
 
         
     }
