@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +12,18 @@ namespace BiblioRead.Controllers
 {
     public class BooksController : Controller {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public BooksController(ApplicationDbContext context) {
+        public BooksController(ApplicationDbContext context, IMapper mapper) {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet("/api/books")]
-        public async Task<IEnumerable<Book>> GetBooks() {
-            return await context.Books.Include(b => b.Author).ToListAsync();
+        public async Task<IEnumerable<BookResource>> GetBooks() {
+            var books = await context.Books.Include(b => b.Author).ToListAsync();
+
+            return mapper.Map<List<Book>, List<BookResource>>(books);
         }
     }
 }
