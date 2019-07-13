@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiblioRead.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190712230540_DeleteUnneccesaryColumn")]
-    partial class DeleteUnneccesaryColumn
+    [Migration("20190713152447_InititalModel")]
+    partial class InititalModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
