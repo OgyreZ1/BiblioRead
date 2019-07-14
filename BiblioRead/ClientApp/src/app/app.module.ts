@@ -30,6 +30,7 @@ import { BookService } from "./services/book.service";
       { path: 'books/new', component: BookFormComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: '**', redirectTo: 'Home' },
     ])
   ],
   providers: [

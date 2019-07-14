@@ -11,5 +11,7 @@ namespace BiblioRead.Controllers.Resources
 
         public string Title { get; set; }
 
+        public AuthorResource Author { get; set; }
+
     }
 }

@@ -12,10 +12,6 @@ namespace BiblioRead.Controllers.Resources
 
         public string Name { get; set; }
 
-        public ICollection<BookResource> Books { get; set; }
-
-        public AuthorResource() {
-            Books = new Collection<BookResource>();
-        }
+        
     }
 }

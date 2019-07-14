@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BiblioRead.Controllers
 {
+    [Route("/api/books")]
     public class BooksController : Controller {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -19,11 +20,18 @@ namespace BiblioRead.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("/api/books")]
+        [HttpGet]
         public async Task<IEnumerable<BookResource>> GetBooks() {
             var books = await context.Books.Include(b => b.Author).ToListAsync();
 
             return mapper.Map<List<Book>, List<BookResource>>(books);
+        }
+
+        [HttpGet("{id}")]
+        public BookResource GetBook(int id) {
+            var book = context.Books.Include(b => b.Author).SingleOrDefault(b => b.Id == id);
+
+            return mapper.Map<Book, BookResource>(book);
         }
     }
 }
