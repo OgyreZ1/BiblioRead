@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using BiblioRead.Models;
 
 namespace BiblioRead.Controllers.Resources
 {
@@ -12,6 +13,12 @@ namespace BiblioRead.Controllers.Resources
 
         public string Name { get; set; }
 
-        
+        public ICollection<BookResource> Books { get; set; }
+
+        public AuthorResource()
+        {
+            Books = new Collection<BookResource>();
+        }
+
     }
 }

@@ -28,14 +28,14 @@ namespace BiblioRead.Controllers
         }
 
         [HttpGet("{id}")]
-        public BookResource GetBook(int id) {
-            var book = context.Books.Include(b => b.Author).SingleOrDefault(b => b.Id == id);
+        public async Task<BookResource> GetBook(int id) {
+            var book = await context.Books.Include(b => b.Author).SingleOrDefaultAsync(b => b.Id == id);
 
             return mapper.Map<Book, BookResource>(book);
         }
 
         [HttpPost]
-        public IActionResult CreateBook([FromBody] BookResource bookResource) {
+        public async Task<IActionResult> CreateBook([FromBody] BookResource bookResource) {
             var bookInDb = context.Books.SingleOrDefault(b => b.Title == bookResource.Title);
 
             if (bookInDb != null && bookInDb.Author.Name == bookResource.AuthorName && bookInDb.Year == bookResource.Year) {
@@ -43,68 +43,80 @@ namespace BiblioRead.Controllers
             }
 
 
-            Author author = context.Authors.SingleOrDefault(a => a.Name.Equals(bookResource.AuthorName));
+            Author author = await context.Authors.SingleOrDefaultAsync(a => a.Name.Equals(bookResource.AuthorName));
             if (author == null)
             {
                 author = new Author()
                 {
                     Name = bookResource.AuthorName
                 };
+                await context.Authors.AddAsync(author);
             }
 
             var book = new Book()
             {
                 Author = author,
-                AuthorId = author.Id,
                 Title = bookResource.Title,
                 Year = bookResource.Year
             };
 
             author.Books.Add(book);
-            context.Books.Add(book);
+            book.AuthorId = author.Id;
+            bookResource.AuthorId = book.AuthorId;
+            
+            await context.Books.AddAsync(book);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            bookResource.Id = book.Id;
             return Ok(bookResource);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteBook(int id) {
-            var book = context.Books.SingleOrDefault(b => b.Id == id);
+        public async Task<IActionResult> DeleteBook(int id) {
+            var book = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
             if (book == null)
                 return BadRequest();
 
             context.Books.Remove(book);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBook(int id, BookResource bookResource) {
-            /*var bookInDb = context.Books.SingleOrDefault(b => b.Id == id);
+        public async Task<IActionResult> UpdateBook(int id,[FromBody] BookResource bookResource) {
+            var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
+
             if (bookInDb == null)
                 return BadRequest();
 
             bookInDb.Title = bookResource.Title;
-            bookInDb.Year = bookInDb.Year;
+            bookInDb.Year = bookResource.Year;
 
-            if (bookInDb.AuthorId == bookResource.Author.Id) {
-                context.SaveChanges();
-                return Ok();
+            var authorInDb = await context.Authors.SingleOrDefaultAsync(a => a.Id == bookInDb.AuthorId);
+            if (authorInDb.Name.Equals(bookResource.AuthorName)) {
+                bookResource.Id = bookInDb.Id;
+                bookResource.AuthorId = bookInDb.AuthorId;
+                await context.SaveChangesAsync();
+                return Ok(bookResource);
             }
 
-            Author author = context.Authors.SingleOrDefault(a => a.Name == bookResource.Author.Name);
-            if (author == null) {
-                author = new Author() {
-                    Name = bookResource.Author.Name
-                };
-            }
+            var author = new Author()
+            {
+                Name = bookResource.AuthorName
+            };
             author.Books.Add(bookInDb);
+            await context.Authors.AddAsync(author);
 
-            context.SaveChanges();*/
+            bookInDb.Author = author;
+            bookInDb.AuthorId = author.Id;
 
-            return Ok();
+            bookResource.AuthorId = bookInDb.AuthorId;
+            bookResource.Id = bookInDb.Id;
+
+            await context.SaveChangesAsync();
+            return Ok(bookResource);
         }
 
     }
