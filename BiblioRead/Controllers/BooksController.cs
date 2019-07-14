@@ -33,5 +33,79 @@ namespace BiblioRead.Controllers
 
             return mapper.Map<Book, BookResource>(book);
         }
+
+        [HttpPost]
+        public IActionResult CreateBook([FromBody] BookResource bookResource) {
+            var bookInDb = context.Books.SingleOrDefault(b => b.Title == bookResource.Title);
+
+            if (bookInDb != null && bookInDb.Author.Name == bookResource.AuthorName && bookInDb.Year == bookResource.Year) {
+                return BadRequest();
+            }
+
+
+            Author author = context.Authors.SingleOrDefault(a => a.Name.Equals(bookResource.AuthorName));
+            if (author == null)
+            {
+                author = new Author()
+                {
+                    Name = bookResource.AuthorName
+                };
+            }
+
+            var book = new Book()
+            {
+                Author = author,
+                AuthorId = author.Id,
+                Title = bookResource.Title,
+                Year = bookResource.Year
+            };
+
+            author.Books.Add(book);
+            context.Books.Add(book);
+
+            context.SaveChanges();
+            return Ok(bookResource);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBook(int id) {
+            var book = context.Books.SingleOrDefault(b => b.Id == id);
+
+            if (book == null)
+                return BadRequest();
+
+            context.Books.Remove(book);
+            context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateBook(int id, BookResource bookResource) {
+            /*var bookInDb = context.Books.SingleOrDefault(b => b.Id == id);
+            if (bookInDb == null)
+                return BadRequest();
+
+            bookInDb.Title = bookResource.Title;
+            bookInDb.Year = bookInDb.Year;
+
+            if (bookInDb.AuthorId == bookResource.Author.Id) {
+                context.SaveChanges();
+                return Ok();
+            }
+
+            Author author = context.Authors.SingleOrDefault(a => a.Name == bookResource.Author.Name);
+            if (author == null) {
+                author = new Author() {
+                    Name = bookResource.Author.Name
+                };
+            }
+            author.Books.Add(bookInDb);
+
+            context.SaveChanges();*/
+
+            return Ok();
+        }
+
     }
 }
