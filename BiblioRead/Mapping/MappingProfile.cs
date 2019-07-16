@@ -13,6 +13,8 @@ namespace BiblioRead.Mapping
         public MappingProfile() {
             CreateMap<Book, BookResource>();
             CreateMap<Author, AuthorResource>();
+
+            
         }
     }
 }

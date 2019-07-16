@@ -21,29 +21,53 @@ namespace BiblioRead.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<BookResource>> GetBooks() {
+        public async Task<IActionResult> GetBooks() {
             var books = await context.Books.Include(b => b.Author).ToListAsync();
 
-            return mapper.Map<List<Book>, List<BookResource>>(books);
+            var booksRecources = mapper.Map<List<Book>, List<BookResource>>(books);
+            return Ok(booksRecources);
         }
 
         [HttpGet("{id}")]
-        public async Task<BookResource> GetBook(int id) {
-            var book = await context.Books.Include(b => b.Author).SingleOrDefaultAsync(b => b.Id == id);
+        public async Task<IActionResult> GetBook(int id) {
+            var bookInDb = await context.Books.Include(b => b.Author)
+                .SingleOrDefaultAsync(b => b.Id == id);
 
-            return mapper.Map<Book, BookResource>(book);
+            if (bookInDb == null)
+            {
+                return NotFound();
+            }
+
+            var bookResource = mapper.Map<Book, BookResource>(bookInDb);
+
+            return Ok(bookResource);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] BookResource bookResource) {
-            var bookInDb = context.Books.SingleOrDefault(b => b.Title == bookResource.Title);
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
 
-            if (bookInDb != null && bookInDb.Author.Name == bookResource.AuthorName && bookInDb.Year == bookResource.Year) {
-                return BadRequest();
+            if (bookResource.Year <= 0 || bookResource.Year > DateTime.Now.Year) {
+                ModelState.AddModelError("Year", "The field Year must be between 0 and " 
+                                                 + DateTime.Now.Year + ".");
+                return BadRequest(ModelState);
+            }
+
+            var bookInDb = await context.Books.Include(b => b.Author)
+                .SingleOrDefaultAsync(b => b.Title == bookResource.Title);
+
+            if (bookInDb != null && bookInDb.Author.Name == bookResource.AuthorName
+                                 && bookInDb.Year == bookResource.Year) {
+                ModelState.AddModelError("book", "This book is already exists.");
+                return BadRequest(ModelState);
             }
 
 
-            Author author = await context.Authors.SingleOrDefaultAsync(a => a.Name.Equals(bookResource.AuthorName));
+            Author author = await context.Authors.Include(a => a.Books)
+                .SingleOrDefaultAsync(a => a.Name.Equals(bookResource.AuthorName));
+
             if (author == null)
             {
                 author = new Author()
@@ -61,6 +85,7 @@ namespace BiblioRead.Controllers
             };
 
             author.Books.Add(book);
+
             book.AuthorId = author.Id;
             bookResource.AuthorId = book.AuthorId;
             
@@ -73,12 +98,13 @@ namespace BiblioRead.Controllers
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id) {
-            var book = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
+            var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
-            if (book == null)
-                return BadRequest();
+            if (bookInDb == null) {
+                return NotFound();
+            }
 
-            context.Books.Remove(book);
+            context.Books.Remove(bookInDb);
             await context.SaveChangesAsync();
 
             return Ok();
@@ -88,13 +114,16 @@ namespace BiblioRead.Controllers
         public async Task<IActionResult> UpdateBook(int id,[FromBody] BookResource bookResource) {
             var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
-            if (bookInDb == null)
-                return BadRequest();
+            if (bookInDb == null) {
+                return NotFound();
+            }
 
             bookInDb.Title = bookResource.Title;
             bookInDb.Year = bookResource.Year;
 
-            var authorInDb = await context.Authors.SingleOrDefaultAsync(a => a.Id == bookInDb.AuthorId);
+            var authorInDb = await context.Authors
+                .SingleOrDefaultAsync(a => a.Id == bookInDb.AuthorId);
+
             if (authorInDb.Name.Equals(bookResource.AuthorName)) {
                 bookResource.Id = bookInDb.Id;
                 bookResource.AuthorId = bookInDb.AuthorId;
@@ -106,6 +135,7 @@ namespace BiblioRead.Controllers
             {
                 Name = bookResource.AuthorName
             };
+
             author.Books.Add(bookInDb);
             await context.Authors.AddAsync(author);
 
