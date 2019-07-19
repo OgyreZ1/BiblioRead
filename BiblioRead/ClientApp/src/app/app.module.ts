@@ -10,8 +10,9 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { BookFormComponent } from './book-form/book-form.component';
-import { BookService } from "./services/book.service";
 import { BooksComponent } from './books/books.component';
+import { BooksService } from './services/books.service';
+import { BookComponent } from './book/book.component'
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { BooksComponent } from './books/books.component';
     CounterComponent,
     FetchDataComponent,
     BookFormComponent,
-    BooksComponent
+    BooksComponent,
+    BookComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,6 +32,7 @@ import { BooksComponent } from './books/books.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'books/new', component: BookFormComponent },
+      { path: 'book/:id', component: BookComponent },
       { path: 'books', component: BooksComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
@@ -37,7 +40,7 @@ import { BooksComponent } from './books/books.component';
     ])
   ],
   providers: [
-      BookService
+    BooksService
     ],
   bootstrap: [AppComponent]
 })
