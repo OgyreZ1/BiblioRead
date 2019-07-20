@@ -6,6 +6,7 @@
     <th>Title</th>
     <th>Year of publish</th>
     <th>Author</th>
+    <th>Delete</th>
   </tr>
   </thead>
 
@@ -14,6 +15,7 @@
     <td><a [routerLink]="['/book', book.id]">{{ book.title }}</a></td>
     <td>{{ book.year }}</td>
     <td>{{ book.authorName }}</td>
+    <td><button class="btn btn-danger" (click)="delete(book.id)">Delete</button></td>
   </tr>
   
   </tbody>

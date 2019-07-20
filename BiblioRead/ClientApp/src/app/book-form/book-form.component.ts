@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Book } from '../interfaces/book';
+import { BooksService } from '../services/books.service';
+
 
 @Component({
   selector: 'app-book-form',
@@ -6,22 +9,40 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./book-form.component.css']
 })
 export class BookFormComponent implements OnInit {
-  title: string;
-  authorName: string;
-  year: number;
+  book: Book = {
+    title: '',
+    authorName: ''
+  };
+  receivedBook: Book = new Book();
+  fail: boolean = false;
+  success: boolean = false;
+  error;
 
-  onKeyUp() {
-    console.log(this.title);
-  }
-
-
-  onSubmit($event) {
-    console.log(this.title, this.authorName, this.year);
-  }
-
-  constructor() { }
+  constructor(private bookService: BooksService) { }
 
   ngOnInit() {
+
   }
+
+
+  onSubmit() {
+    //console.log(this.book);
+    this.bookService.createBook(this.book)
+      .subscribe(
+      (data: Book) => {
+          this.receivedBook = data;
+          this.fail = false;
+          this.success = true;
+        },
+        error => {
+          this.error = error;
+        console.log(error);
+        this.fail = true;
+      }
+    );;
+  }
+
+  
+
 
 }

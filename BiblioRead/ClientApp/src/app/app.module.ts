@@ -12,7 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { BookFormComponent } from './book-form/book-form.component';
 import { BooksComponent } from './books/books.component';
 import { BooksService } from './services/books.service';
-import { BookComponent } from './book/book.component'
+import { BookComponent } from './book/book.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import { BookComponent } from './book/book.component'
       { path: 'books', component: BooksComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: '**', redirectTo: 'Home' },
+      { path: '**', redirectTo: 'Home' }
     ])
   ],
   providers: [

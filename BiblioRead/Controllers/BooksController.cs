@@ -50,16 +50,17 @@ namespace BiblioRead.Controllers
             }
 
             if (bookResource.Year <= 0 || bookResource.Year > DateTime.Now.Year) {
-                ModelState.AddModelError("Year", "The field Year must be between 0 and " 
+                ModelState.AddModelError("book", "The field Year must be between 0 and " 
                                                  + DateTime.Now.Year + ".");
                 return BadRequest(ModelState);
             }
 
             var bookInDb = await context.Books.Include(b => b.Author)
-                .SingleOrDefaultAsync(b => b.Title == bookResource.Title);
+                .SingleOrDefaultAsync(b => b.Title == bookResource.Title 
+                                           && b.Author.Name == bookResource.AuthorName 
+                                           && b.Year == bookResource.Year);
 
-            if (bookInDb != null && bookInDb.Author.Name == bookResource.AuthorName
-                                 && bookInDb.Year == bookResource.Year) {
+            if (bookInDb != null) {
                 ModelState.AddModelError("book", "This book is already exists.");
                 return BadRequest(ModelState);
             }

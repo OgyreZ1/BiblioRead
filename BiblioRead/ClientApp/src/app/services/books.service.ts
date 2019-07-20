@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Book } from '../interfaces/book';
+import { _throw } from 'rxjs/observable/throw';
+import { catchError } from 'rxjs/operators';
 
 
 const httpOptions = {
@@ -14,12 +16,11 @@ const httpOptions = {
 @Injectable()
 export class BooksService {
   booksUrl = 'api/books';
-  
 
   constructor(private http: HttpClient) {
   }
 
-  getBooks(): Observable<Book[]>{
+  getBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(this.booksUrl);
   }
 
@@ -27,4 +28,13 @@ export class BooksService {
     return this.http.get<Book>(this.booksUrl + '/' + id);
   }
 
+  createBook(book: Book): Observable<Book> {
+    return this.http.post<Book>(this.booksUrl, book);
+  }
+
+  deleteBook(id: number) {
+    const url = `${this.booksUrl}/${id}`;
+    return this.http.delete(url);
+  }
 }
+

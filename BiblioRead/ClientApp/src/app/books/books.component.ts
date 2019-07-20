@@ -21,4 +21,11 @@ export class BooksComponent implements OnInit {
       .subscribe(books => (this.books = books));
   }
 
+  delete(id: number) {
+    this.booksService.deleteBook(id)
+      .subscribe(() => {
+        this.getBooks();
+      });
+  }
+
 }
