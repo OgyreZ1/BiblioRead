@@ -1,2 +1,70 @@
-<h1>{{book?.title}}</h1>
-form
+<form *ngIf="book" #bookForm="ngForm" (ngSubmit)="onEdit(book)">
+  <h1>{{ book.title }} </h1>
+
+  <div class="form-group">
+    <label for="title">Book Title</label>
+    <input
+           [(ngModel)]="book.title"
+           name="title" 
+           #title="ngModel"
+           required
+           id="title"
+           type="text"
+           placeholder="Book title"
+           class="form-control" />
+    <div class="alert alert-danger" *ngIf="title.touched && !title.valid">
+      <div *ngIf="title.errors.required">
+        Title is required
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="authorName">Author</label>
+    <input [(ngModel)]="book.authorName"
+           name="authorName"
+           #authorName="ngModel"
+           required
+           id="authorName"
+           type="text"
+           placeholder="Author"
+           class="form-control" />
+    <div class="alert alert-danger" *ngIf="authorName.touched && !authorName.valid">
+      <div *ngIf="authorName.errors.required">
+        authorName name is required
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="year">Year of publish</label>
+    <input [(ngModel)]="book.year"
+           name="year"
+           #year="ngModel"
+           required
+           id="year"
+           type="number"
+           placeholder="Year of publish"
+           class="form-control"
+           max="2019" />
+    <div class="alert alert-danger" *ngIf="year.touched && !year.valid">
+      <div *ngIf="year.errors.required">
+        Year is required
+      </div>
+    </div>
+  </div>
+
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mb-2" [disabled]="!bookForm.valid" >Edit</button>
+  </div>
+  <br />
+
+  <div *ngIf="fail" class="alert alert-danger">
+    <h3 style="color: red">Error</h3>
+    {{ error.error.book }}
+  </div>
+  <div *ngIf="success">
+    <h3 style="color: green">Success!</h3>
+  </div>
+
+</form>

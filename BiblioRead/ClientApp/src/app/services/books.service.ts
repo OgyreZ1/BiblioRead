@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Book } from '../interfaces/book';
+import { Book } from '../classes/book';
 import { _throw } from 'rxjs/observable/throw';
 import { catchError } from 'rxjs/operators';
 
@@ -35,6 +35,12 @@ export class BooksService {
   deleteBook(id: number) {
     const url = `${this.booksUrl}/${id}`;
     return this.http.delete(url);
+  }
+
+  updateBook(id: number, book: Book) {
+    console.log(id);
+    const url = `${this.booksUrl}/${id}`;
+    return this.http.put(url, book);
   }
 }
 
