@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Book } from '../classes/book';
-import { _throw } from 'rxjs/observable/throw';
 import { catchError } from 'rxjs/operators';
 
 
@@ -15,7 +14,7 @@ const httpOptions = {
 
 @Injectable()
 export class BooksService {
-  booksUrl = 'api/books';
+  booksUrl = 'http://localhost:5000/api/books';
 
   constructor(private http: HttpClient) {
   }

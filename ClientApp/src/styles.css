@@ -1,0 +1,27 @@
+button[type=submit].btn{
+  border-radius: 20px;
+  background-color: #000;
+  color: #fff;
+}
+
+.div.form-group.touched.invalid {
+  border-color: red;
+}
+
+div.form-group.required>label:first-child:after{
+  content:'*';
+  color: #dc3545;
+padding-left: 5px;
+}
+
+#toast-container > div {
+  opacity:1;
+}
+
+form{
+  margin: 0px 16px;
+}
+
+div.side-header{
+  border:3px solid black;
+}

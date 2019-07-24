@@ -11,7 +11,8 @@
       id="title"
       type="text"
       placeholder="Book title"
-      class="form-control" />
+      class="form-control"
+       />
     <div class="alert alert-danger" *ngIf="title.touched && !title.valid">
       <div *ngIf="title.errors.required">
         Title is required</div>
@@ -28,7 +29,8 @@
       id="authorName"
       type="text"
       placeholder="Author"
-      class="form-control"/>
+      class="form-control"
+      />
     <div class="alert alert-danger" *ngIf="authorName.touched && !authorName.valid">
       <div *ngIf="authorName.errors.required">
         authorName name is required
@@ -47,7 +49,8 @@
       type="number"
       placeholder="Year of publish"
       class="form-control"
-      max="2019"/>
+      max="2019"
+      />
     <div class="alert alert-danger" *ngIf="year.touched && !year.valid">
       <div *ngIf="year.errors.required">
         Year is required

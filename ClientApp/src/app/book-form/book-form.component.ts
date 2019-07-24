@@ -5,8 +5,7 @@ import { BooksService } from '../services/books.service';
 
 @Component({
   selector: 'app-book-form',
-  templateUrl: './book-form.component.html',
-  styleUrls: ['./book-form.component.css']
+  templateUrl: './book-form.component.html'
 })
 export class BookFormComponent implements OnInit {
   book: Book = {

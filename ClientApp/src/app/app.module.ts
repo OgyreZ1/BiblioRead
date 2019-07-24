@@ -1,8 +1,13 @@
+import { BooksService } from './services/books.service';
+import { UserService } from './services/user.service';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -11,8 +16,9 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { BookFormComponent } from './book-form/book-form.component';
 import { BooksComponent } from './books/books.component';
-import { BooksService } from './services/books.service';
 import { BookComponent } from './book/book.component';
+import { UserComponent } from './user/user.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -23,12 +29,19 @@ import { BookComponent } from './book/book.component';
     FetchDataComponent,
     BookFormComponent,
     BooksComponent,
-    BookComponent
+    BookComponent,
+    UserComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule, 
+    ToastrModule.forRoot({
+      progressBar: true
+    }),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'books/new', component: BookFormComponent },
@@ -36,11 +49,15 @@ import { BookComponent } from './book/book.component';
       { path: 'books', component: BooksComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'user', component: UserComponent, children: [
+        {path: 'registration', component: RegistrationComponent}
+      ] },
       { path: '**', redirectTo: 'Home' }
     ])
   ],
   providers: [
-    BooksService
+    BooksService,
+    UserService
     ],
   bootstrap: [AppComponent]
 })
