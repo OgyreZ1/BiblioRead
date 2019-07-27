@@ -1,42 +1,38 @@
-<form #bookForm="ngForm" (ngSubmit)="onSubmit(book)">
-  <h1>New book </h1>
-
-  <div class="form-group">
-    <label for="title">Book Title</label>
-    <input
-      [(ngModel)]="book.title"
-      name="title"
-      #title="ngModel"
-      required
-      id="title"
-      type="text"
-      placeholder="Book title"
-      class="form-control"
-       />
-    <div class="alert alert-danger" *ngIf="title.touched && !title.valid">
-      <div *ngIf="title.errors.required">
-        Title is required</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="authorName">Author</label>
-    <input
-      [(ngModel)]="book.authorName"
-      name="authorName"
-      #authorName="ngModel"
-      required
-      id="authorName"
-      type="text"
-      placeholder="Author"
-      class="form-control"
-      />
-    <div class="alert alert-danger" *ngIf="authorName.touched && !authorName.valid">
-      <div *ngIf="authorName.errors.required">
-        authorName name is required
+<div class="wrapper">
+    <div class="wrapped-div" style="width: 600px">
+      <div class="tab-header">
+        <h1>New book </h1>
       </div>
-    </div>
-  </div>
+      <form #bookForm="ngForm" (ngSubmit)="onSubmit(book)">
+        <div class="form-group">
+          <label for="title">Book Title</label>
+          <input
+            [(ngModel)]="book.title"
+            name="title"
+            #title="ngModel"
+            required
+            id="title"
+            type="text"
+            placeholder="Book title"
+            class="form-control"
+            />
+          <label class="text-danger" *ngIf="title.touched && !title.valid">Title is required</label>
+        </div>
+
+        <div class="form-group">
+          <label for="authorName">Author</label>
+          <input
+            [(ngModel)]="book.authorName"
+            name="authorName"
+            #authorName="ngModel"
+            required
+            id="authorName"
+            type="text"
+            placeholder="Author"
+            class="form-control"
+            />
+          <label class="text-danger" *ngIf="authorName.touched && !authorName.valid">Author's name is required</label>
+        </div>
 
   <div class="form-group">
     <label for="year">Year of publish</label>
@@ -51,11 +47,8 @@
       class="form-control"
       max="2019"
       />
-    <div class="alert alert-danger" *ngIf="year.touched && !year.valid">
-      <div *ngIf="year.errors.required">
-        Year is required
-      </div>
-    </div>
+    <label class="text-danger" *ngIf="year.touched && !year.valid">Year of publish is required</label>
+
   </div>
 
   <div class="col-auto">
@@ -72,3 +65,5 @@
   </div>
 
 </form>
+</div>
+</div>

@@ -19,6 +19,7 @@ import { BooksComponent } from './books/books.component';
 import { BookComponent } from './book/book.component';
 import { UserComponent } from './user/user.component';
 import { RegistrationComponent } from './user/registration/registration.component';
+import { LoginComponent } from './user/login/login.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { RegistrationComponent } from './user/registration/registration.componen
     BookComponent,
     UserComponent,
     RegistrationComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -43,14 +45,15 @@ import { RegistrationComponent } from './user/registration/registration.componen
       progressBar: true
     }),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', component: BooksComponent, pathMatch: 'full' },
       { path: 'books/new', component: BookFormComponent },
       { path: 'book/:id', component: BookComponent },
       { path: 'books', component: BooksComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'user', component: UserComponent, children: [
-        {path: 'registration', component: RegistrationComponent}
+        {path: 'registration', component: RegistrationComponent},
+        {path: 'login', component: LoginComponent}
       ] },
       { path: '**', redirectTo: 'Home' }
     ])
