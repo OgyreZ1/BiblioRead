@@ -7,21 +7,20 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './nav-menu.component.html'
 })
 export class NavMenuComponent implements OnInit{
-  ngOnInit(){
+  userDetails;
 
+  ngOnInit() {
+    this.service.getUserProfile().subscribe(
+      res => {
+        this.userDetails = res;
+      },
+      err => {
+        console.log(err);
+      }
+    )
   }
 
-  isExpanded = false;
-
-  constructor(private router: Router, private service: UserService) {
-  }
-
-  collapse() {
-    this.isExpanded = false;
-  }
-
-  toggle() {
-    this.isExpanded = !this.isExpanded;
+  constructor(private service: UserService, private router: Router) {      
   }
 
   onLogout() {

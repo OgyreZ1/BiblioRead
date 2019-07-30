@@ -105,3 +105,19 @@ form {
   color: #fff;
   margin-bottom: 10px;
 }
+
+nav {
+  max-height: 45px;
+}
+
+.dropdown-menu {
+  background-color: #343a40;
+}
+.dropdown-item {
+  color: rgba(255,255,255,.5);
+}
+.dropdown-item:hover {
+  background-color: #343a40;
+  color: white;
+}
+

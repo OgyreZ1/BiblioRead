@@ -29,12 +29,21 @@
               <a class="nav-link" [routerLink]='["/user/registration"]' *ngIf="!service.authenticated()">
                 <i class="fas fa-user-plus"></i> Register
               </a>
-            </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]='' (click)='onLogout()' *ngIf="service.authenticated()">
+          </li>
+          <li class="nav-item dropdown" *ngIf="userDetails">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{userDetails.userName}}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" [routerLink]="['/home']" routerLinkActive="router-link-active" >Account Settings</a>
+              <div class="dropdown-divider" style="border-top: 1px solid black"></div>
+            
+            <a class="dropdown-item" [routerLink]='' (click)='onLogout()' *ngIf="service.authenticated()">
                 <i class="fas fa-user-slash"></i> Log out
             </a>
-          </li>
+          </div>
+          </li> 
+        
       </ul>
     </div> 
   </nav>
