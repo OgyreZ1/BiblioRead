@@ -7,17 +7,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './nav-menu.component.html'
 })
 export class NavMenuComponent implements OnInit{
-  userDetails;
 
   ngOnInit() {
-    this.service.getUserProfile().subscribe(
-      res => {
-        this.userDetails = res;
-      },
-      err => {
-        console.log(err);
-      }
-    )
   }
 
   constructor(private service: UserService, private router: Router) {      
@@ -26,5 +17,6 @@ export class NavMenuComponent implements OnInit{
   onLogout() {
     localStorage.removeItem('token');
     this.router.navigate(['user/login']);
+
   }
 }

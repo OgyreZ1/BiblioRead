@@ -29,6 +29,9 @@ formModel = {
       (res:any)=>{
         localStorage.setItem('token', res.token);
         this.router.navigateByUrl('/home');
+        this.service.userName = form.value.UserName;
+        console.log(form.value.UserName + " " + this.service.userName);
+        
       },
       err => {
         if (err.status == 400) 
@@ -37,5 +40,7 @@ formModel = {
           console.log(err);
       }
     );
+    console.log();
+    
   }
 }

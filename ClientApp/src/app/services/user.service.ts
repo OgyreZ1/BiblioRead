@@ -8,6 +8,7 @@ export class UserService {
 
   constructor(private fb: FormBuilder, private http:HttpClient) { }
   readonly usersUrl = 'http://localhost:5000/api'
+  public userName: string;
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -44,6 +45,7 @@ export class UserService {
 
   login(formData) {
     return this.http.post(this.usersUrl+'/ApplicationUsers/Login', formData);
+    
   }
 
   getUserProfile() {

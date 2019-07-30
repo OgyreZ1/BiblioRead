@@ -30,9 +30,9 @@
                 <i class="fas fa-user-plus"></i> Register
               </a>
           </li>
-          <li class="nav-item dropdown" *ngIf="userDetails">
+          <li class="nav-item dropdown" *ngIf="service.authenticated()">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{userDetails.userName}}
+              {{service.userName}}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" [routerLink]="['/home']" routerLinkActive="router-link-active" >Account Settings</a>
