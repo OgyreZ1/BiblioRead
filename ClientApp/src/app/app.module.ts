@@ -4,7 +4,7 @@ import { UserService } from './services/user.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -20,6 +20,8 @@ import { BookComponent } from './book/book.component';
 import { UserComponent } from './user/user.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { LoginComponent } from './user/login/login.component';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { LoginComponent } from './user/login/login.component';
     }),
     RouterModule.forRoot([
       { path: '', component: BooksComponent, pathMatch: 'full' },
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
       { path: 'books/new', component: BookFormComponent },
       { path: 'book/:id', component: BookComponent },
       { path: 'books', component: BooksComponent },
@@ -60,7 +63,11 @@ import { LoginComponent } from './user/login/login.component';
   ],
   providers: [
     BooksService,
-    UserService
+    UserService, {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
     ],
   bootstrap: [AppComponent]
 })

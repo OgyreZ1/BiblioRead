@@ -1,1 +1,17 @@
-<p>login works!</p>
+<form #form="ngForm" class="mb-4" autocomplete="off" style="text-align: center" (submit)="onSubmit(form)">
+    <div class="form-group">
+        <label>UserName</label>
+        <input #UserName="ngModel" name="UserName" [(ngModel)]="formModel.UserName" required class="form-control">
+        <label class="text-danger" *ngIf="UserName.touched && UserName.errors?.required">This
+            field is required.</label>
+    </div>   
+    <div class="form-group">
+        <label>Password</label>
+        <input #Password="ngModel" name="Password" [(ngModel)]="formModel.Password" required type="password" class="form-control">
+        <label class="text-danger" *ngIf="Password.touched && Password.errors?.required">This
+            field is required.</label>
+    </div>   
+    <div class="col-auto" style="text-align: center">
+        <button type="submit" class="btn" [disabled]="!form.valid">Log in</button>
+    </div>
+</form>

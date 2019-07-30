@@ -40,7 +40,7 @@ div.form-group.required>label:first-child:after{
   justify-content: center;
   width: 100%;
   padding: 20px;
-  padding-left: 150px;
+  padding-left: 0px;
 }
 
 .wrapped-div {
@@ -80,10 +80,6 @@ div.form-group.required>label:first-child:after{
     outline: none;
 }
 
-form{
-    margin: 0px 16px;
-}
-
 div.form-group input.invalid{
   border: 1px solid #dc3545; 
 }
@@ -92,12 +88,6 @@ div.form-group label:first-child{
   font-size: 0.9rem;
 }
 
-.navbar .navbar-header,
-.navbar-collapse {
-    float:none;
-    display:inline-block;
-    vertical-align: top;
-}
 
 a {
   color: white;
@@ -108,5 +98,10 @@ a:hover {
 
 form { 
   width: 50%;
-  margin-left: 25%
+  margin: auto;
+}
+
+.btn {
+  color: #fff;
+  margin-bottom: 10px;
 }

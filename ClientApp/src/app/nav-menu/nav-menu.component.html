@@ -1,36 +1,40 @@
-<div class='main-nav'>
-    <div class='navbar navbar-inverse'>
-        <div class='navbar-header'>
-            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse' [attr.aria-expanded]='isExpanded' (click)='toggle()'>
-                <span class='sr-only'>Toggle navigation</span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
-                <span class='icon-bar'></span>
-            </button>
-            <a class='navbar-brand' [routerLink]='["/books"]'>BiblioRead</a>
-        </div>
-        <div class='clearfix'></div>
-        <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
-          <ul class='nav navbar-nav'>
-            <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-              <a [routerLink]='["/user/registration"]' (click)='collapse()'>
-                <span class='glyphicon glyphicon-home'></span> Log in
-              </a>
-            </li>
-            <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-              <a [routerLink]='["/books/new"]' (click)='collapse()'>
-                <span class='glyphicon glyphicon-plus'></span> New Book
-              </a>
-            </li>
-            <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-              <a [routerLink]='["/books"]' (click)='collapse()'>
-                <span class='glyphicon glyphicon-th-list'></span> Books
-              </a>
-            </li>
-          </ul>
-        </div>
-    </div>
-</div>
 
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark ">
+    <a class="navbar-brand" [routerLink]='["/books"]'>BiblioRead</a>
 
- 
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]='["/books/new"]'>
+            <i class="fas fa-plus-square"></i> New book
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]='["/books"]'>
+            <i class="fas fa-book"></i> Books
+          </a>
+        </li> 
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" [routerLink]='["/user/login"]' *ngIf="!service.authenticated()">
+              <i class="fas fa-user"></i> Log in
+            </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" [routerLink]='["/user/registration"]' *ngIf="!service.authenticated()">
+                <i class="fas fa-user-plus"></i> Register
+              </a>
+            </li>
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]='' (click)='onLogout()' *ngIf="service.authenticated()">
+                <i class="fas fa-user-slash"></i> Log out
+            </a>
+          </li>
+      </ul>
+    </div> 
+  </nav>

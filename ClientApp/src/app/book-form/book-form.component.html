@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <div class="wrapped-div" style="width: 600px">
+    <div class="wrapped-div" style="width: 600px; padding:20px">
       <div class="tab-header">
         <h1>New book </h1>
       </div>
@@ -51,15 +51,15 @@
 
   </div>
 
-  <div class="col-auto">
-    <button type="submit" class="btn btn-primary mb-2" [disabled]="!bookForm.valid">Submit</button>
+  <div class="col-auto" style="text-align: center">
+    <button type="submit" class="btn mb-2" [disabled]="!bookForm.valid">Submit</button>
   </div>
   <br />
   <div *ngIf="fail" class="alert alert-danger">
     <h3 style="color: red">Error</h3>
     {{ error.error.book }}
   </div>
-  <div *ngIf="success" class="success">
+  <div *ngIf="success" class="success" style="text-align: center">
     <h3 style="color: green">Success!</h3>
     <a [routerLink]="['/book', receivedBook.id]">Go to this book</a>
   </div>
