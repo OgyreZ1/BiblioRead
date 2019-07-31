@@ -1,5 +1,5 @@
+import { AuthenticationService } from './../../services/authentication.service';
 import { Component, OnInit } from '@angular/core';
-import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -9,16 +9,16 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AddLibrarianComponent implements OnInit {
 
-  constructor(private service: UserService, private toastr: ToastrService, private router: Router) { }
+  constructor(private authService: AuthenticationService, private toastr: ToastrService, private router: Router) { }
 
   ngOnInit() {
   }
 
   onSubmit(){
-    this.service.register("Librarian").subscribe(
+    this.authService.register("Librarian").subscribe(
       (res: any) => {
         if (res.succeeded) {
-          this.service.formModel.reset();
+          this.authService.formModel.reset();
           this.toastr.success('Librarian has successfully registred', 'Success!');
         } else {
           res.errors.forEach(element => {

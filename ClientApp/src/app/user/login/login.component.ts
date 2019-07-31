@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
@@ -15,7 +16,8 @@ formModel = {
   Password: ''
 }
 
-  constructor(private service:UserService,
+  constructor(private authService:AuthenticationService,
+              private userService: UserService,
               private router: Router,
               private toastr: ToastrService) { }
 
@@ -25,11 +27,11 @@ formModel = {
   }
 
   onSubmit(form: NgForm) {
-    this.service.login(form.value).subscribe(
+    this.authService.login(form.value).subscribe(
       (res:any)=>{
         localStorage.setItem('token', res.token);
         this.router.navigateByUrl('/home');
-        this.service.loadCurrentUser();
+        this.userService.loadCurrentUser();
       },
       err => {
         if (err.status == 400) 

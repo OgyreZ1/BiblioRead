@@ -1,7 +1,7 @@
-import { Role } from './../models/role';
-import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../services/authentication.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -10,11 +10,11 @@ import { Component, OnInit } from '@angular/core';
 export class NavMenuComponent implements OnInit{
   currentUser;
   ngOnInit() {
-    if (this.service.authenticated())
-      this.service.loadCurrentUser();
+    if (this.userService.authenticated())
+      this.userService.loadCurrentUser();
   }
 
-  constructor(private service: UserService, private router: Router) {  
+  constructor(private userService: UserService, private authService: AuthenticationService, private router: Router) {  
 
   }
 
@@ -23,7 +23,7 @@ export class NavMenuComponent implements OnInit{
   }
 
   onLogout() {
-    this.service.logout();
+    this.authService.logout();
     this.router.navigate(['user/login']);
 
   }

@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
-import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor(private router: Router,private service: UserService, private toastr: ToastrService) { }
+  constructor(private router: Router,private authService: AuthenticationService, private toastr: ToastrService) { }
 
   ngOnInit() {
     if (localStorage.getItem('token')  != null)
@@ -18,10 +18,10 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(){
-    this.service.register().subscribe(
+    this.authService.register().subscribe(
       (res: any) => {
         if (res.succeeded) {
-          this.service.formModel.reset();
+          this.authService.formModel.reset();
           this.toastr.success('You have successfully registred', 'Success!');
           this.router.navigateByUrl('/home');
         } else {

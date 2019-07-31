@@ -1,3 +1,4 @@
+import { AuthenticationService } from './services/authentication.service';
 import { BooksService } from './services/books.service';
 import { UserService } from './services/user.service';
 
@@ -70,11 +71,13 @@ import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.compo
   ],
   providers: [
     BooksService,
-    UserService, {
+    UserService,
+    AuthenticationService, {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    
     ],
   bootstrap: [AppComponent]
 })
