@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Router } from '@angular/router';
 
 @Injectable()
-export class UserService {
+export class UserService implements OnInit {
+
+  ngOnInit() {
+    if (this.authenticated())
+      this.loadCurrentUser();
+  }
 
   constructor(private fb: FormBuilder, private http:HttpClient) { }
   readonly usersUrl = 'http://localhost:5000/api'
-  public userName: string;
+  public currentUser;
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -31,31 +35,57 @@ export class UserService {
     }
   }
 
-  register() {
+  register(role: string = "Customer") {
     var fm = this.formModel.value;
     var body = {
       UserName: fm.UserName,
       Email: fm.Email,
       FullName: fm.FullName,
       Password: fm.Passwords.Password,
+      Role: role
     }
-
     return this.http.post(this.usersUrl+'/ApplicationUsers/Register', body);
   }
 
   login(formData) {
     return this.http.post(this.usersUrl+'/ApplicationUsers/Login', formData);
-    
+  }
+
+  logout() {
+    localStorage.removeItem('token');
   }
 
   getUserProfile() {
-    
     return this.http.get(this.usersUrl + '/UserProfile');
+  }
+
+  loadCurrentUser() {
+    this.getUserProfile().subscribe(
+      res => {
+        this.currentUser = res;
+      },
+      err => console.log(err)
+    );
   }
   
   authenticated() {
     if (localStorage.getItem('token') != null)
       return true;
     return false;
+  }
+
+  roleMatch(allowedRoles): boolean {
+    var isMatch = false;
+    var payLoad = JSON.parse(window.atob(localStorage.getItem('token').split('.')[1]));
+    var userRole = payLoad.role;
+    let roles = allowedRoles.split(', ');
+    
+    roles.forEach(element => {
+      if (userRole == element) {
+        isMatch = true
+        return false
+        ;}
+    });
+    return isMatch;
   }
 }

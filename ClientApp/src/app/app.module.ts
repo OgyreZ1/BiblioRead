@@ -22,6 +22,8 @@ import { RegistrationComponent } from './user/registration/registration.componen
 import { LoginComponent } from './user/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { AdminComponent } from './admin/admin.component';
+import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     UserComponent,
     RegistrationComponent,
     LoginComponent,
+    AdminComponent,
+    AddLibrarianComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -49,11 +53,14 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     RouterModule.forRoot([
       { path: '', component: BooksComponent, pathMatch: 'full' },
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-      { path: 'books/new', component: BookFormComponent },
+      { path: 'books/new', component: BookFormComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin, Librarian'} },
       { path: 'book/:id', component: BookComponent },
       { path: 'books', component: BooksComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin'}, children: [
+        {path: 'add-librarian', canActivate: [AuthGuard], component: AddLibrarianComponent},
+      ] },
       { path: 'user', component: UserComponent, children: [
         {path: 'registration', component: RegistrationComponent},
         {path: 'login', component: LoginComponent}

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace BiblioRead.Controllers
 {
@@ -31,6 +32,31 @@ namespace BiblioRead.Controllers
                 user.Email,
                 user.UserName
             };
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("ForAdmin")]
+        public string GetForAdmin() { 
+            return "Web method for Admin";
+        }
+        [HttpGet]
+        [Authorize(Roles = "Customer")]
+        [Route("ForCustomer")]
+        public string GetForCustomer() {
+            return "Web method for Customer";
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Librarian")]
+        [Route("ForAdminOrLibrarian")]
+        public string GetForAdminOrLibrarian() {
+            return "Web method for Admin or Librarian";
+        }
+        [HttpGet]
+        [Authorize(Roles = "Admin, Customer, Librarian")]
+        [Route("ForAdminOrLibrarianOrCustomer")]
+        public string GetForAdminOrLibrarianOrCustomer() {
+            return "Web method for Admin, Librarian or Customer";
         }
 
     }

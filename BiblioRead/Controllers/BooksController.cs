@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,6 +44,7 @@ namespace BiblioRead.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, Librarian")]
         public async Task<IActionResult> CreateBook([FromBody] BookResource bookResource) {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -98,6 +99,7 @@ namespace BiblioRead.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin, Librarian")]
         public async Task<IActionResult> DeleteBook(int id) {
             var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
@@ -112,7 +114,8 @@ namespace BiblioRead.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id,[FromBody] BookResource bookResource) {
+        [Authorize(Roles = "Admin, Librarian")]
+        public async Task<IActionResult> UpdateBook(int id,[Microsoft.AspNetCore.Mvc.FromBody] BookResource bookResource) {
             var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
             if (bookInDb == null) {

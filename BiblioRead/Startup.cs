@@ -38,7 +38,8 @@ namespace BiblioRead
             options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
             services.AddDefaultIdentity<ApplicationUser>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.Configure<IdentityOptions>(options => {
                 options.Password.RequireDigit = false;
