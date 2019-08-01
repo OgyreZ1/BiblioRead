@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,9 +16,11 @@ namespace BiblioRead.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase {
         private UserManager<ApplicationUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public UserProfileController(UserManager<ApplicationUser> userManager) {
+        public UserProfileController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -34,7 +37,25 @@ namespace BiblioRead.Controllers
             };
         }
 
-        [HttpGet]
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser(ApplicationUserResource resource) {
+
+            var user = await _userManager.FindByIdAsync(resource.Id);
+            if (user == null) return BadRequest();
+
+            user.FullName = resource.FullName;
+            user.UserName = resource.UserName;
+            user.Email = resource.UserName;
+
+            var userRole = _userManager.GetRolesAsync(user).Result;
+            await _userManager.RemoveFromRolesAsync(user, userRole);
+            await _userManager.AddToRoleAsync(user, resource.Role);
+
+            return Ok();
+        }
+
+        /*[HttpGet]
         [Authorize(Roles = "Admin")]
         [Route("ForAdmin")]
         public string GetForAdmin() { 
@@ -57,7 +78,7 @@ namespace BiblioRead.Controllers
         [Route("ForAdminOrLibrarianOrCustomer")]
         public string GetForAdminOrLibrarianOrCustomer() {
             return "Web method for Admin, Librarian or Customer";
-        }
+        }*/
 
     }
 }

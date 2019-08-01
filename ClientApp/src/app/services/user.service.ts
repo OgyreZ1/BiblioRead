@@ -1,7 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { AuthenticationService } from './authentication.service';
+import { FormBuilder} from '@angular/forms';
+import { HttpClient } from "@angular/common/http";
+import { User } from '../models/user';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UserService implements OnInit {
@@ -12,11 +13,19 @@ export class UserService implements OnInit {
   }
 
   constructor(private fb: FormBuilder, private http:HttpClient) { }
-  readonly usersUrl = 'http://localhost:5000/api'
+  readonly baseUrl = 'http://localhost:5000/api'
   public currentUser;
 
   getUserProfile() {
-    return this.http.get(this.usersUrl + '/UserProfile');
+    return this.http.get(this.baseUrl + '/UserProfile');
+  }
+
+  getUsers(): Observable<User[]>{
+    return this.http.get<User[]>(this.baseUrl + '/ApplicationUsers');
+  }
+
+  deleteUser(id: string) {
+    return this.http.delete(this.baseUrl + '/ApplicationUsers/' + id);
   }
 
   roleMatch(allowedRoles): boolean {
@@ -32,6 +41,10 @@ export class UserService implements OnInit {
         ;}
     });
     return isMatch;
+  }
+
+  updateUser(user: User) {
+    return this.http.put(this.baseUrl + '/UserProfile/', user);
   }
 
   authenticated() {

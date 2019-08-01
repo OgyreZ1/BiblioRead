@@ -18,7 +18,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(){
-    this.authService.register().subscribe(
+    this.authService.register("Customer").subscribe(
       (res: any) => {
         if (res.succeeded) {
           this.authService.formModel.reset();

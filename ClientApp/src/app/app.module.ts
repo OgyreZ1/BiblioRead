@@ -23,6 +23,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { AdminComponent } from './admin/admin.component';
 import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.component';
+import { UsersComponent } from './admin/users/users.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.compo
     LoginComponent,
     AdminComponent,
     AddLibrarianComponent,
+    UsersComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,6 +57,7 @@ import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.compo
       { path: 'books', component: BooksComponent },
       { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin'}, children: [
         {path: 'add-librarian', canActivate: [AuthGuard], component: AddLibrarianComponent},
+        {path: 'users', canActivate: [AuthGuard], component: UsersComponent},
       ] },
       { path: 'user', component: UserComponent, children: [
         {path: 'registration', component: RegistrationComponent},

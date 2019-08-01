@@ -5,12 +5,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,12 +23,17 @@ namespace BiblioRead.Controllers
     public class ApplicationUsersController : ControllerBase {
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
         private readonly ApplicationSettings _appSettings;
+        
 
-        public ApplicationUsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings) {
+        public ApplicationUsersController(IMapper mapper, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOptions<ApplicationSettings> appSettings, ApplicationDbContext context) {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
             _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         // api/ApplicationUsers/Register
@@ -79,7 +86,45 @@ namespace BiblioRead.Controllers
             else {
                 return BadRequest(new { message = "Username or password is incorrect"});
             }
-        } 
-        
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsersAndLibrarians() {
+            // GET all customers
+            var customers = await _userManager.GetUsersInRoleAsync("Customer");
+            var customerResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(customers);
+            foreach (var userResource in customerResources)
+            {
+                userResource.Role = "Customer";
+            }
+
+            // GET all librarians
+            var librarians = await _userManager.GetUsersInRoleAsync("Librarian");
+            var librarianResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(librarians);
+            foreach (var librarianResource in librarianResources)
+            {
+                librarianResource.Role = "Librarian";
+            }
+
+            var usersAndLibrarians = new List<ApplicationUserResource>();
+            usersAndLibrarians.AddRange(customerResources);
+            usersAndLibrarians.AddRange(librarianResources);
+
+            return Ok(usersAndLibrarians);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteUser(string id) {
+            var userInDb = await _userManager.FindByIdAsync(id);
+
+            if (userInDb == null)
+                return NotFound();
+
+            await _userManager.DeleteAsync(userInDb);
+            return Ok();
+        }
+
     }
 }

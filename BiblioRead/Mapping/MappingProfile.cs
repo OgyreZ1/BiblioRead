@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BiblioRead.Mapping
 {
@@ -13,8 +14,9 @@ namespace BiblioRead.Mapping
         public MappingProfile() {
             CreateMap<Book, BookResource>();
             CreateMap<Author, AuthorResource>();
+            CreateMap<ApplicationUser, ApplicationUserResource>();
+            CreateMap<IdentityUser, ApplicationUserResource>();
 
-            
         }
     }
 }

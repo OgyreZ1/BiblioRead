@@ -34,7 +34,7 @@ export class AuthenticationService{
     }
   }
 
-  register(role: string = "Customer") {
+  register(role: string) {
     var fm = this.formModel.value;
     var body = {
       UserName: fm.UserName,

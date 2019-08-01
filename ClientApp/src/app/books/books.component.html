@@ -19,7 +19,7 @@
       <td><a [routerLink]="['/book', book.id]">{{ book.title }}</a></td>
       <td>{{ book.year }}</td>
       <td>{{ book.authorName }}</td>
-      <td *ngIf="userService.authenticated() && userService.roleMatch('Admin, Librarian')"><button class="btn btn-danger" style="border-radius: 20px" (click)="delete(book.id)">Delete</button></td>
+      <td *ngIf="userService.authenticated() && userService.roleMatch('Admin, Librarian')"><button class="btn btn-danger" (click)="delete(book.id)">Delete</button></td>
     </tr>
     
     </tbody>
