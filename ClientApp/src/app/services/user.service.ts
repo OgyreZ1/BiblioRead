@@ -20,8 +20,8 @@ export class UserService implements OnInit {
     return this.http.get(this.baseUrl + '/UserProfile');
   }
 
-  getUsers(): Observable<User[]>{
-    return this.http.get<User[]>(this.baseUrl + '/ApplicationUsers');
+  getUsers(role: string): Observable<User[]>{
+    return this.http.get<User[]>(this.baseUrl + '/ApplicationUsers/' + role);
   }
 
   deleteUser(id: string) {

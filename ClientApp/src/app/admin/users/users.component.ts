@@ -8,22 +8,24 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class UsersComponent implements OnInit {
   users: User[];
-
+  title: string = 'Customers';
+  role: string;
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.getUsers();
+    this.getUsers("Customer");
   }
 
-  getUsers(): void {
-    this.userService.getUsers()
-      .subscribe(users => (this.users = users));
+  getUsers(role: string): void {
+    this.userService.getUsers(role)
+    .subscribe(customers => this.users = customers);
+    this.role = role;
   }
 
   delete(id: string) {
     this.userService.deleteUser(id)
       .subscribe(() => {
-        this.getUsers();
+        this.getUsers(this.role);
       })
   }
 
@@ -31,7 +33,7 @@ export class UsersComponent implements OnInit {
     user.role = "Librarian";
     this.userService.updateUser(user)
     .subscribe(() => {
-      this.getUsers();
+      this.getUsers(this.role);
     });
   }
 
@@ -39,7 +41,7 @@ export class UsersComponent implements OnInit {
     user.role = "Customer";
     this.userService.updateUser( user)
     .subscribe(() => {
-      this.getUsers();
+      this.getUsers(this.role);
     });
   }
 

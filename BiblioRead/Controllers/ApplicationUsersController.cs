@@ -88,30 +88,17 @@ namespace BiblioRead.Controllers
             }
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> GetUsersAndLibrarians() {
-            // GET all customers
-            var customers = await _userManager.GetUsersInRoleAsync("Customer");
-            var customerResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(customers);
-            foreach (var userResource in customerResources)
+        [Route("{role}")]
+        public async Task<IActionResult> GetUsersByRole(string role) {
+            var users = await _userManager.GetUsersInRoleAsync(role);
+            var userResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(users);
+            foreach (var userResource in userResources)
             {
-                userResource.Role = "Customer";
+                userResource.Role = role;
             }
 
-            // GET all librarians
-            var librarians = await _userManager.GetUsersInRoleAsync("Librarian");
-            var librarianResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(librarians);
-            foreach (var librarianResource in librarianResources)
-            {
-                librarianResource.Role = "Librarian";
-            }
-
-            var usersAndLibrarians = new List<ApplicationUserResource>();
-            usersAndLibrarians.AddRange(customerResources);
-            usersAndLibrarians.AddRange(librarianResources);
-
-            return Ok(usersAndLibrarians);
+            return Ok(userResources);
         }
 
         [HttpDelete]
