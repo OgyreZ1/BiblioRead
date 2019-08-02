@@ -20,6 +20,7 @@ export class UsersComponent implements OnInit {
     this.userService.getUsers(role)
     .subscribe(customers => this.users = customers);
     this.role = role;
+    this.title = role + 's';
   }
 
   delete(id: string) {
