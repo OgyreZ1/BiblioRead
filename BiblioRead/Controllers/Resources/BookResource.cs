@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,11 @@ namespace BiblioRead.Controllers.Resources
 
         public int AuthorId { get; set; }
 
-        
+        public IEnumerable<int> RentalIds { get; set; }
+
+        public BookResource() {
+            RentalIds = new Collection<int>();
+        }
 
     }
 }

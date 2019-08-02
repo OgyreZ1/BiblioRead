@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,5 +12,11 @@ namespace BiblioRead.Models
     {
         [Column(TypeName = "nvarchar(255)")]
         public string FullName { get; set; }
+
+        public IEnumerable<Rental> Rentals { get; set; }
+
+        public ApplicationUser() {
+            Rentals = new Collection<Rental>();
+        }
     }
 }

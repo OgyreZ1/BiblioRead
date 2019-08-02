@@ -92,10 +92,21 @@ namespace BiblioRead.Controllers
         [Route("{role}")]
         public async Task<IActionResult> GetUsersByRole(string role) {
             var users = await _userManager.GetUsersInRoleAsync(role);
-            var userResources = _mapper.Map<IList<ApplicationUser>, IList<ApplicationUserResource>>(users);
-            foreach (var userResource in userResources)
-            {
+            var userResources = new List<ApplicationUserResource>();
+
+            foreach (var user in users) {
+                var userRentals = _context.Rentals.Where(r => r.User.Id == user.Id);
+                var rentalIds = new List<int>();
+
+                foreach (var userRental in userRentals) {
+                    rentalIds.Add(userRental.Id);
+                }
+
+                var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(user);
+                userResource.RentalIds = rentalIds;
                 userResource.Role = role;
+
+                userResources.Add(userResource);
             }
 
             return Ok(userResources);

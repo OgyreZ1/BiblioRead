@@ -2,12 +2,10 @@
 
 namespace BiblioRead.Migrations
 {
-    public partial class SeedDatabaseAgain : Migration
+    public partial class SeedBooksAndAuthors : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DELETE FROM Authors");
-
             migrationBuilder.Sql("INSERT INTO Authors (Name) VALUES (N'Булгаков Михаил Афанасьевич')");
             migrationBuilder.Sql("INSERT INTO Authors (Name) VALUES (N'Толстой Лев Николаевич')");
             migrationBuilder.Sql("INSERT INTO Authors (Name) VALUES (N'Пушкин Александр Сергеевич')");

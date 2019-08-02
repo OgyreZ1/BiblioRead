@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiblioRead.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190728132646_SeedDatabase")]
-    partial class SeedDatabase
+    [Migration("20190802213209_SeedRoles")]
+    partial class SeedRoles
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,6 +55,40 @@ namespace BiblioRead.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.BookRental", b =>
+                {
+                    b.Property<int>("BookId");
+
+                    b.Property<int>("RentalId");
+
+                    b.HasKey("BookId", "RentalId");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("BookRentals");
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.Rental", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<DateTime>("EndingDate");
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -243,6 +277,26 @@ namespace BiblioRead.Migrations
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.BookRental", b =>
+                {
+                    b.HasOne("BiblioRead.Models.Book", "Book")
+                        .WithMany("RentalLinks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BiblioRead.Models.Rental", "Rental")
+                        .WithMany("BooksLink")
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.Rental", b =>
+                {
+                    b.HasOne("BiblioRead.Models.ApplicationUser", "User")
+                        .WithMany("Rentals")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiblioRead.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190724132425_Identity")]
-    partial class Identity
+    [Migration("20190802213029_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -55,6 +55,40 @@ namespace BiblioRead.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.BookRental", b =>
+                {
+                    b.Property<int>("BookId");
+
+                    b.Property<int>("RentalId");
+
+                    b.HasKey("BookId", "RentalId");
+
+                    b.HasIndex("RentalId");
+
+                    b.ToTable("BookRentals");
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.Rental", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<DateTime>("EndingDate");
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -234,8 +268,6 @@ namespace BiblioRead.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(255)");
 
-                    b.ToTable("ApplicationUser");
-
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
@@ -245,6 +277,26 @@ namespace BiblioRead.Migrations
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.BookRental", b =>
+                {
+                    b.HasOne("BiblioRead.Models.Book", "Book")
+                        .WithMany("RentalLinks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BiblioRead.Models.Rental", "Rental")
+                        .WithMany("BooksLink")
+                        .HasForeignKey("RentalId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BiblioRead.Models.Rental", b =>
+                {
+                    b.HasOne("BiblioRead.Models.ApplicationUser", "User")
+                        .WithMany("Rentals")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

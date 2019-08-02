@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BiblioRead.Controllers.Resources;
@@ -12,25 +13,45 @@ namespace BiblioRead.Controllers
 {
     [Route("/api/books")]
     public class BooksController : Controller {
-        private readonly ApplicationDbContext context;
-        private readonly IMapper mapper;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public BooksController(ApplicationDbContext context, IMapper mapper) {
-            this.context = context;
-            this.mapper = mapper;
+            this._context = context;
+            this._mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetBooks() {
-            var books = await context.Books.Include(b => b.Author).ToListAsync();
+            var books = await _context.Books.Include(b => b.Author).ToListAsync();
 
-            var booksRecources = mapper.Map<List<Book>, List<BookResource>>(books);
-            return Ok(booksRecources);
+            
+
+            var bookResources = new List<BookResource>();
+
+            foreach (var book in books) {
+                var bookRentals = _context.BookRentals.Where(br => br.BookId == book.Id);
+                var rentalIds = new List<int>();
+
+                foreach (var rentalLink in bookRentals)
+                {
+                    rentalIds.Add(rentalLink.RentalId);
+                }
+
+                var bookResource = _mapper.Map<Book, BookResource>(book);
+                bookResource.RentalIds = rentalIds;
+
+                bookResources.Add(bookResource);
+            }
+
+            return Ok(bookResources);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook(int id) {
-            var bookInDb = await context.Books.Include(b => b.Author)
+            var bookInDb = await _context.Books.
+                Include(b => b.Author)
+                .Include(b => b.RentalLinks)
                 .SingleOrDefaultAsync(b => b.Id == id);
 
             if (bookInDb == null)
@@ -38,7 +59,7 @@ namespace BiblioRead.Controllers
                 return NotFound();
             }
 
-            var bookResource = mapper.Map<Book, BookResource>(bookInDb);
+            var bookResource = _mapper.Map<Book, BookResource>(bookInDb);
 
             return Ok(bookResource);
         }
@@ -56,7 +77,7 @@ namespace BiblioRead.Controllers
                 return BadRequest(ModelState);
             }
 
-            var bookInDb = await context.Books.Include(b => b.Author)
+            var bookInDb = await _context.Books.Include(b => b.Author)
                 .SingleOrDefaultAsync(b => b.Title == bookResource.Title 
                                            && b.Author.Name == bookResource.AuthorName 
                                            && b.Year == bookResource.Year);
@@ -67,7 +88,7 @@ namespace BiblioRead.Controllers
             }
 
 
-            Author author = await context.Authors.Include(a => a.Books)
+            Author author = await _context.Authors.Include(a => a.Books)
                 .SingleOrDefaultAsync(a => a.Name.Equals(bookResource.AuthorName));
 
             if (author == null)
@@ -76,7 +97,7 @@ namespace BiblioRead.Controllers
                 {
                     Name = bookResource.AuthorName
                 };
-                await context.Authors.AddAsync(author);
+                await _context.Authors.AddAsync(author);
             }
 
             var book = new Book()
@@ -91,9 +112,9 @@ namespace BiblioRead.Controllers
             book.AuthorId = author.Id;
             bookResource.AuthorId = book.AuthorId;
             
-            await context.Books.AddAsync(book);
+            await _context.Books.AddAsync(book);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             bookResource.Id = book.Id;
             return Ok(bookResource);
         }
@@ -101,14 +122,14 @@ namespace BiblioRead.Controllers
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin, Librarian")]
         public async Task<IActionResult> DeleteBook(int id) {
-            var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
+            var bookInDb = await _context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
             if (bookInDb == null) {
                 return NotFound();
             }
 
-            context.Books.Remove(bookInDb);
-            await context.SaveChangesAsync();
+            _context.Books.Remove(bookInDb);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -116,7 +137,7 @@ namespace BiblioRead.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin, Librarian")]
         public async Task<IActionResult> UpdateBook(int id,[Microsoft.AspNetCore.Mvc.FromBody] BookResource bookResource) {
-            var bookInDb = await context.Books.SingleOrDefaultAsync(b => b.Id == id);
+            var bookInDb = await _context.Books.SingleOrDefaultAsync(b => b.Id == id);
 
             if (bookInDb == null) {
                 return NotFound();
@@ -125,13 +146,13 @@ namespace BiblioRead.Controllers
             bookInDb.Title = bookResource.Title;
             bookInDb.Year = bookResource.Year;
 
-            var authorInDb = await context.Authors
+            var authorInDb = await _context.Authors
                 .SingleOrDefaultAsync(a => a.Id == bookInDb.AuthorId);
 
             if (authorInDb.Name.Equals(bookResource.AuthorName)) {
                 bookResource.Id = bookInDb.Id;
                 bookResource.AuthorId = bookInDb.AuthorId;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok(bookResource);
             }
 
@@ -141,7 +162,7 @@ namespace BiblioRead.Controllers
             };
 
             author.Books.Add(bookInDb);
-            await context.Authors.AddAsync(author);
+            await _context.Authors.AddAsync(author);
 
             bookInDb.Author = author;
             bookInDb.AuthorId = author.Id;
@@ -149,7 +170,7 @@ namespace BiblioRead.Controllers
             bookResource.AuthorId = bookInDb.AuthorId;
             bookResource.Id = bookInDb.Id;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok(bookResource);
         }
 
