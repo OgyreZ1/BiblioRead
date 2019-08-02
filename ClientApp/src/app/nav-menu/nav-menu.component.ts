@@ -8,7 +8,6 @@ import { UserService } from '../services/user.service';
   templateUrl: './nav-menu.component.html'
 })
 export class NavMenuComponent implements OnInit{
-  currentUser;
   ngOnInit() {
     if (this.userService.authenticated())
       this.userService.loadCurrentUser();
