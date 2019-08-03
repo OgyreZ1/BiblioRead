@@ -13,7 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
 import { BookFormComponent } from './book-form/book-form.component';
 import { BooksComponent } from './books/books.component';
 import { BookComponent } from './book/book.component';
@@ -31,7 +31,7 @@ import { CartComponent } from './cart/cart.component';
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
+    UserSettingsComponent,
     BookFormComponent,
     BooksComponent,
     BookComponent,
@@ -54,7 +54,7 @@ import { CartComponent } from './cart/cart.component';
     }),
     RouterModule.forRoot([
       { path: '', component: BooksComponent, pathMatch: 'full' },
-      { path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+      { path: 'home', component: UserSettingsComponent, canActivate: [AuthGuard]},
       { path: 'cart', component: CartComponent, canActivate: [AuthGuard]},
       { path: 'books/new', component: BookFormComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin, Librarian'} },
       { path: 'book/:id', component: BookComponent },
