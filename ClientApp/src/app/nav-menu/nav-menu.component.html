@@ -40,9 +40,14 @@
               {{userService.currentUser.userName}}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" [routerLink]="['/home']" routerLinkActive="router-link-active" >Account Settings</a>
+                <a class="dropdown-item" [routerLink]="['/cart']" routerLinkActive="router-link-active" >
+                  <i class="fas fa-shopping-cart"></i> Cart
+                </a>
+              <a class="dropdown-item" [routerLink]="['/home']" routerLinkActive="router-link-active" >
+                <i class="fas fa-user-cog"></i> Account Settings
+              </a>
+              
               <div class="dropdown-divider" style="border-top: 1px solid black"></div>
-            
             <a class="dropdown-item" [routerLink]='' (click)='onLogout()' *ngIf="userService.authenticated()">
                 <i class="fas fa-user-slash"></i> Log out
             </a>

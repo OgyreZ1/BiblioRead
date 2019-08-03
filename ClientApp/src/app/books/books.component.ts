@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Book } from '../models/book';
 import { BooksService } from '../services/books.service';
 import { UserService } from '../services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../services/user.service';
 })
 export class BooksComponent implements OnInit {
   books: Book[];
-  constructor(private userService: UserService, private booksService: BooksService) { }
+  constructor(private toastr: ToastrService, private userService: UserService, private booksService: BooksService) { }
 
   ngOnInit() {
     this.getBooks();
@@ -26,6 +27,17 @@ export class BooksComponent implements OnInit {
       .subscribe(() => {
         this.getBooks();
       });
+  }
+
+  addToCart(id: number) {
+    if (!this.userService.bookIds.includes(id)) {
+      this.userService.bookIds.push(id);
+      this.toastr.success('You successfully took this book', 'Success');
+    }
+    else {
+      this.toastr.error('You have already took this book', "Error")
+    }
+    
   }
 
 }

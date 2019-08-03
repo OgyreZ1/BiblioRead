@@ -39,7 +39,6 @@ namespace BiblioRead.Controllers
                 }
 
                 var bookResource = _mapper.Map<Book, BookResource>(book);
-                bookResource.RentalIds = rentalIds;
 
                 bookResources.Add(bookResource);
             }

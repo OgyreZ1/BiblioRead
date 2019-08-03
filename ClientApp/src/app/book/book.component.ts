@@ -5,8 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-book',
-  templateUrl: './book.component.html',
-  styleUrls: ['./book.component.css']
+  templateUrl: './book.component.html'
 })
 export class BookComponent implements OnInit {
   book: Book;
@@ -23,6 +22,7 @@ export class BookComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    //Get bookId from search request
     this.sub = this.route.params.subscribe(params => {
       this.id = +params['id'];
     });

@@ -106,10 +106,6 @@ form {
   margin-bottom: 10px;
 }
 
-nav {
-  max-height: 45px;
-}
-
 .dropdown-menu {
   background-color: #343a40;
 }
@@ -121,3 +117,10 @@ nav {
   color: white;
 }
 
+th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}

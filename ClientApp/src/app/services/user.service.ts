@@ -15,6 +15,7 @@ export class UserService implements OnInit {
   constructor(private fb: FormBuilder, private http:HttpClient) { }
   readonly baseUrl = 'http://localhost:5000/api'
   public currentUser;
+  public bookIds: Array<number> = [1, 2, 3];
 
   getUserProfile() {
     return this.http.get(this.baseUrl + '/UserProfile');

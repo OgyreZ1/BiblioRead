@@ -23,11 +23,8 @@ namespace BiblioRead.Controllers.Resources
 
         public int AuthorId { get; set; }
 
-        public IEnumerable<int> RentalIds { get; set; }
 
-        public BookResource() {
-            RentalIds = new Collection<int>();
-        }
+        
 
     }
 }
