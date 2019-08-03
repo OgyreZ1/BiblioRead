@@ -23,14 +23,14 @@ formModel = {
 
   ngOnInit() {
     if (localStorage.getItem('token')  != null)
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/user/settings');
   }
 
   onSubmit(form: NgForm) {
     this.authService.login(form.value).subscribe(
       (res:any)=>{
         localStorage.setItem('token', res.token);
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/user/settings');
         this.userService.loadCurrentUser();
       },
       err => {

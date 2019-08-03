@@ -14,7 +14,7 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     if (localStorage.getItem('token')  != null)
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/user/settings');
   }
 
   onSubmit(){
@@ -23,7 +23,7 @@ export class RegistrationComponent implements OnInit {
         if (res.succeeded) {
           this.authService.formModel.reset();
           this.toastr.success('You have successfully registred', 'Success!');
-          this.router.navigateByUrl('/home');
+          this.router.navigateByUrl('/user/settings');
         } else {
           res.errors.forEach(element => {
              switch (element.code) {
