@@ -14,11 +14,11 @@ export class UserService implements OnInit {
 
   constructor(private fb: FormBuilder, private http:HttpClient) { }
   readonly baseUrl = 'http://localhost:5000/api'
-  public currentUser;
-  public bookIds: Array<number> = [1, 2, 3];
+  public currentUser: User;
+  public bookIds: Array<number> = [];
 
-  getUserProfile() {
-    return this.http.get(this.baseUrl + '/UserProfile');
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(this.baseUrl + '/UserProfile');
   }
 
   getUsers(role: string): Observable<User[]>{
@@ -56,7 +56,7 @@ export class UserService implements OnInit {
 
   loadCurrentUser() {
     this.getUserProfile().subscribe(
-      res => {
+      res => {   
         this.currentUser = res;
       },
       err => console.log(err)

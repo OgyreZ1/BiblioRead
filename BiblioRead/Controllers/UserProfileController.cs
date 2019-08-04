@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace BiblioRead.Controllers
 {
@@ -16,11 +16,13 @@ namespace BiblioRead.Controllers
     [ApiController]
     public class UserProfileController : ControllerBase {
         private UserManager<ApplicationUser> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
+        private ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UserProfileController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) {
+        public UserProfileController(UserManager<ApplicationUser> userManager, IMapper mapper, ApplicationDbContext context) {
             _userManager = userManager;
-            _roleManager = roleManager;
+            _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet]
@@ -30,12 +32,31 @@ namespace BiblioRead.Controllers
             string userId = User.Claims.First(c => c.Type == "UserId").Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            return new {
-                user.Id,
-                user.FullName,
-                user.Email,
-                user.UserName
-            };
+            var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(user);
+
+            var userRentals = _context.Rentals
+            .Include(r => r.BooksLink)
+            .ThenInclude(bl => bl.Book)
+            .ThenInclude(b => b.Author)
+            .Where(r => r.User.Id == userId).ToList();
+
+            var rentalResources = new List<RentalResource>();
+            foreach (var rental in userRentals)
+            {
+                var bookIdsInRental = rental.BooksLink.Select(bookLink => bookLink.BookId).ToList();
+
+                var bookResources = rental.BooksLink.Select(bookRental => _mapper.Map<Book, BookResource>(bookRental.Book)).ToList();
+
+                var rentalResource = _mapper.Map<Rental, RentalResource>(rental);
+                rentalResource.BookIds = bookIdsInRental;
+                rentalResource.Books = bookResources;
+
+                rentalResources.Add(rentalResource);
+            }
+
+            userResource.Rentals = rentalResources;
+
+            return Ok(userResource);
         }
 
         [HttpPut]
@@ -56,30 +77,6 @@ namespace BiblioRead.Controllers
             return Ok();
         }
 
-        /*[HttpGet]
-        [Authorize(Roles = "Admin")]
-        [Route("ForAdmin")]
-        public string GetForAdmin() { 
-            return "Web method for Admin";
-        }
-        [HttpGet]
-        [Authorize(Roles = "Customer")]
-        [Route("ForCustomer")]
-        public string GetForCustomer() {
-            return "Web method for Customer";
-        }
-        [HttpGet]
-        [Authorize(Roles = "Admin, Librarian")]
-        [Route("ForAdminOrLibrarian")]
-        public string GetForAdminOrLibrarian() {
-            return "Web method for Admin or Librarian";
-        }
-        [HttpGet]
-        [Authorize(Roles = "Admin, Customer, Librarian")]
-        [Route("ForAdminOrLibrarianOrCustomer")]
-        public string GetForAdminOrLibrarianOrCustomer() {
-            return "Web method for Admin, Librarian or Customer";
-        }*/
 
     }
 }

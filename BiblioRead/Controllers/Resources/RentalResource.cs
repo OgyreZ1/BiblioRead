@@ -12,15 +12,20 @@ namespace BiblioRead.Controllers.Resources
 
         public string UserId { get; set; }
 
+        public IEnumerable<BookResource> Books { get; set; }
+
         public IEnumerable<int> BookIds { get; set; }
 
         public DateTime DateCreated { get; set; }
 
-        public DateTime EndingDate { get; set; }
+        public DateTime DeadlineDate { get; set; }
 
-        public bool IsCompleted { get; set; }
+        public DateTime? DateFinished { get; set; }
+
+        public bool IsFinished { get; set; }
 
         public RentalResource() {
+            Books = new Collection<BookResource>();
             BookIds = new Collection<int>();
         }
     }

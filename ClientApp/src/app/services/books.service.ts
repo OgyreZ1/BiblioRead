@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Book } from '../models/book';
-import { catchError } from 'rxjs/operators';
+
 
 
 const httpOptions = {

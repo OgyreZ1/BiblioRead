@@ -16,7 +16,8 @@ namespace BiblioRead.Mapping
             CreateMap<Author, AuthorResource>();
             CreateMap<ApplicationUser, ApplicationUserResource>();
             CreateMap<IdentityUser, ApplicationUserResource>();
-            CreateMap<Rental, RentalResource>();
+            CreateMap<Rental, RentalResource>()
+            .ForMember(rr => rr.UserId, opt => opt.MapFrom(r => r.User.Id));
         }
     }
 }

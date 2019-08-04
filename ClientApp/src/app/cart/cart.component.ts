@@ -41,13 +41,15 @@ export class CartComponent implements OnInit {
 
   onSubmit() {
       
-    var rental: Rental = {
+    var rental = {
         userId: this.userService.currentUser.id, 
         bookIds: this.userService.bookIds
     }
     this.rentalsService.createRental(rental)
     .subscribe(res => {
         this.toastr.success('You took these books', 'Success!');
+        this.userService.bookIds = [];
+        this.getBooks();
     },
     err => {
         this.toastr.error(err.value, 'Error')

@@ -103,7 +103,6 @@ namespace BiblioRead.Controllers
                 }
 
                 var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(user);
-                userResource.RentalIds = rentalIds;
                 userResource.Role = role;
 
                 userResources.Add(userResource);

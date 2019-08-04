@@ -13,7 +13,7 @@ namespace BiblioRead.Models
         [Column(TypeName = "nvarchar(255)")]
         public string FullName { get; set; }
 
-        public IEnumerable<Rental> Rentals { get; set; }
+        public IList<Rental> Rentals { get; set; }
 
         public ApplicationUser() {
             Rentals = new Collection<Rental>();

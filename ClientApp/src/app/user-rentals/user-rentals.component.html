@@ -1,0 +1,63 @@
+<div class="wrapper" style="width: 75%; padding-left: 25%; ">
+        <div class="wrapped-div" style=" padding: 20px; min-width: 570px;">
+            <div class="tab-header">
+            <h1>My rentals</h1>
+        </div>
+        <div class='col-sm-12' >
+            <table class="table table-dark" >
+                <thead>
+                     <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 40%;">Books</th>
+                        <th style="width: 25%;">Creating date</th>
+                        <th style="width: 25%;">Deadline</th>
+                        <th style="width: 5%">Finish</th>
+                    </tr>
+                </thead>
+            <tbody *ngIf="userService.authenticated() && userService.currentUser">
+                <tr *ngFor="let rental of rentalsService.unfinishedRentals">
+                    <td>{{rental.id}}</td>
+                    <td>
+                        <div *ngFor="let book of rental.books">
+                            <a [routerLink]="['/book/' + book.id]" routerLinkActive="router-link-active" >"{{book.title}}"</a>
+                        </div>
+                    </td>
+                    <td>{{rental.dateCreated | date:'medium' }}</td>
+                    <td>{{rental.deadlineDate | date }}</td>
+                    <td>
+                        <button class="btn" (click)="onFinish(rental.id)">
+                                <i class="fas fa-check fa-2x"></i>
+                        </button>      
+                    </td>
+                </tr>    
+            </tbody>
+            </table>
+        </div>
+        
+        <h1 style="text-align: center">My finished rentals</h1>
+        <div class='col-sm-12' >
+            <table class="table table-dark" >
+                <thead>
+                     <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 40%;">Books</th>
+                        <th style="width: 25%;">Creating date</th>
+                        <th style="width: 25%;">Date Finished</th>
+                    </tr>
+                </thead>
+            <tbody *ngIf="userService.authenticated() && userService.currentUser">
+                <tr *ngFor="let rental of rentalsService.finishedRentals" >
+                    <td>{{rental.id}}</td>
+                    <td>
+                        <div *ngFor="let book of rental.books">
+                            <a [routerLink]="['/book/' + book.id]" routerLinkActive="router-link-active" >"{{book.title}}"</a>
+                        </div>
+                    </td>
+                    <td>{{rental.dateCreated | date:'medium' }}</td>
+                    <td>{{rental.dateFinished | date:'medium' }}</td>
+                </tr>    
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -40,6 +40,9 @@
               {{userService.currentUser.userName}}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" [routerLink]="['user/orders']" routerLinkActive="router-link-active" >
+                    <i class="fas fa-address-book"></i> My rentals
+                </a>
                 <a class="dropdown-item" [routerLink]="['/cart']" routerLinkActive="router-link-active" >
                   <i class="fas fa-shopping-cart"></i> Cart
                 </a>

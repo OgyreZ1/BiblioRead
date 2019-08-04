@@ -17,9 +17,11 @@ namespace BiblioRead.Models
 
         public DateTime DateCreated { get; set; }
 
-        public DateTime EndingDate { get; set; }
+        public DateTime DeadlineDate { get; set; }
 
-        public bool IsCompleted { get; set; }
+        public DateTime? DateFinished { get; set; }
+
+        public bool IsFinished { get; set; }
 
         public Rental() {
             BooksLink = new Collection<BookRental>();

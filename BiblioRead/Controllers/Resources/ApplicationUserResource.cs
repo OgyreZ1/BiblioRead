@@ -20,11 +20,11 @@ namespace BiblioRead.Controllers.Resources
 
         public string Role { get; set; }
 
-        public IEnumerable<int> RentalIds { get; set; }
+        public IList<RentalResource> Rentals { get; set; }
 
         public ApplicationUserResource()
         {
-            RentalIds = new Collection<int>();
+            Rentals = new Collection<RentalResource>();
         }
     }
 }

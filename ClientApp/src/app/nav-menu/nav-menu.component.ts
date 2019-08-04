@@ -17,10 +17,6 @@ export class NavMenuComponent implements OnInit{
 
   }
 
-  get isAdmin() {
-    return false;
-  }
-
   onLogout() {
     this.authService.logout();
     this.router.navigate(['user/login']);

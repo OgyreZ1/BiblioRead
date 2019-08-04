@@ -26,7 +26,7 @@ import { AdminComponent } from './admin/admin.component';
 import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.component';
 import { UsersComponent } from './admin/users/users.component';
 import { CartComponent } from './cart/cart.component';
-import { UserBooksComponent } from './user-books/user-books.component';
+import { UserRentalsComponent } from './user-rentals/user-rentals.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import { UserBooksComponent } from './user-books/user-books.component';
     AddLibrarianComponent,
     UsersComponent,
     CartComponent,
-    UserBooksComponent,
+    UserRentalsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -57,6 +57,7 @@ import { UserBooksComponent } from './user-books/user-books.component';
     RouterModule.forRoot([
       { path: '', component: BooksComponent, pathMatch: 'full' },
       { path: 'user/settings', component: UserSettingsComponent, canActivate: [AuthGuard]},
+      { path: 'user/orders', component: UserRentalsComponent, canActivate: [AuthGuard]},
       { path: 'cart', component: CartComponent, canActivate: [AuthGuard]},
       { path: 'books/new', component: BookFormComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin, Librarian'} },
       { path: 'book/:id', component: BookComponent },
@@ -74,7 +75,11 @@ import { UserBooksComponent } from './user-books/user-books.component';
   ],
   providers: [
     BooksService,
-    UserService,
+    UserService, {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true
+      },
     RentalsService,
     AuthenticationService, {
       provide: HTTP_INTERCEPTORS,
