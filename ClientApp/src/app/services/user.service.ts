@@ -58,6 +58,7 @@ export class UserService implements OnInit {
     this.getUserProfile().subscribe(
       res => {   
         this.currentUser = res;
+        console.log(this.currentUser);
       },
       err => console.log(err)
     );

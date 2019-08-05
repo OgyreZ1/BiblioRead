@@ -27,6 +27,7 @@ import { AddLibrarianComponent } from './admin/add-librarian/add-librarian.compo
 import { UsersComponent } from './admin/users/users.component';
 import { CartComponent } from './cart/cart.component';
 import { UserRentalsComponent } from './user-rentals/user-rentals.component';
+import { FileCabinetComponent } from './file-cabinet/file-cabinet.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { UserRentalsComponent } from './user-rentals/user-rentals.component';
     UsersComponent,
     CartComponent,
     UserRentalsComponent,
+    FileCabinetComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -59,6 +61,7 @@ import { UserRentalsComponent } from './user-rentals/user-rentals.component';
       { path: 'user/settings', component: UserSettingsComponent, canActivate: [AuthGuard]},
       { path: 'user/orders', component: UserRentalsComponent, canActivate: [AuthGuard]},
       { path: 'cart', component: CartComponent, canActivate: [AuthGuard]},
+      { path: 'file-cabinet', component: FileCabinetComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin, Librarian'}},
       { path: 'books/new', component: BookFormComponent, canActivate: [AuthGuard], data: {permittedRoles:'Admin, Librarian'} },
       { path: 'book/:id', component: BookComponent },
       { path: 'books', component: BooksComponent },

@@ -8,8 +8,11 @@ import { UserService } from '../services/user.service';
 export class UserSettingsComponent implements OnInit{
   userDetails;
 
+  constructor(private userService: UserService) {      
+  }
+
   ngOnInit() {
-    this.service.getUserProfile().subscribe(
+    this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res;
       },
@@ -19,7 +22,6 @@ export class UserSettingsComponent implements OnInit{
     )
   }
 
-  constructor(private service: UserService) {      
-  }
+  
 
 }

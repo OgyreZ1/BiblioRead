@@ -95,15 +95,27 @@ namespace BiblioRead.Controllers
             var userResources = new List<ApplicationUserResource>();
 
             foreach (var user in users) {
-                var userRentals = _context.Rentals.Where(r => r.User.Id == user.Id);
-                var rentalIds = new List<int>();
+                var userRentals = _context.Rentals.Include(r => r.BooksLink)
+                                                  .ThenInclude(bl => bl.Book)
+                                                  .Where(r => r.User.Id == user.Id);
 
-                foreach (var userRental in userRentals) {
-                    rentalIds.Add(userRental.Id);
+                var rentalResources = new List<RentalResource>();
+                foreach (var rental in userRentals)
+                {
+                    var bookIdsInRental = rental.BooksLink.Select(bookLink => bookLink.BookId).ToList();
+
+                    var bookResources = rental.BooksLink.Select(bookRental => _mapper.Map<Book, BookResource>(bookRental.Book)).ToList();
+
+                    var rentalResource = _mapper.Map<Rental, RentalResource>(rental);
+                    rentalResource.BookIds = bookIdsInRental;
+                    rentalResource.Books = bookResources;
+
+                    rentalResources.Add(rentalResource);
                 }
 
                 var userResource = _mapper.Map<ApplicationUser, ApplicationUserResource>(user);
                 userResource.Role = role;
+                userResource.Rentals = rentalResources;
 
                 userResources.Add(userResource);
             }
