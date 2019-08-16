@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BiblioRead.Controllers.Resources;
 using BiblioRead.Models;
-using BiblioRead.services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -50,21 +49,6 @@ namespace BiblioRead.Controllers
 
             try {
                 var result = await _userManager.CreateAsync(applicationUser, user.Password);
-                if (result.Succeeded) {
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
-                    var callbackUrl = Url.Action(
-                        "ConfirmEmail",
-                        "ApplicationUsers",
-                        new {code, userId = user.Id },
-                        protocol: HttpContext.Request.Scheme
-                    );
-
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(user.Email, "Confirm your account",
-                    $"Hi, {user.UserName}, Confirm the registration by clicking on the <a href='{callbackUrl}'>link</a>");
-
-                }
                 await _userManager.AddToRoleAsync(applicationUser, user.Role);
                 return Ok(result);
             }
@@ -72,34 +56,12 @@ namespace BiblioRead.Controllers
                 throw ex;
             }
         }
-
-        [HttpGet]
-        [Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code) {
-            if (userId == null || code == null)
-                return BadRequest();
-
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return BadRequest();
-
-            var result = await _userManager.ConfirmEmailAsync(user, code);
-            if (result.Succeeded)
-                return Ok();
-
-            return BadRequest();
-        }
-
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginResource loginResource) {
             var user = await _userManager.FindByNameAsync(loginResource.UserName);
 
             if (user != null && await _userManager.CheckPasswordAsync(user, loginResource.Password)) {
-
-                if (!await _userManager.IsEmailConfirmedAsync(user)) {
-                    return BadRequest("You haven't confirm your email");
-                }
 
                 //Get role assigned to the user
                 var role = await _userManager.GetRolesAsync(user);
